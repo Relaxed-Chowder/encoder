@@ -13,10 +13,21 @@ class front{
     }
 
     public static double scytaleEncrypt(String[] input, int turns) {
-        double ceilcolumns = input.length / turns;
-        double columns = Math.ceil(ceilcolumns);
+        int columns = (input.length + 1) / turns;
+        String[][] grid;
+        grid = new String[turns][columns];
+
+        int index = 0;
+
+        for(int i = 0; i<=turns; i++){
+            for(int j = 0; j<=columns; j++){
+                if(j < input.length){
+                    grid[i][j] = input[index];
+                }else{
+                    grid[i][j] = input[index];
+                }
+            }
+        }
         return columns;
     }
 }
-
-    
