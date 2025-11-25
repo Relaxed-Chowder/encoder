@@ -5,8 +5,9 @@ class front{
         int turns = 3;
 
         if(encrypt == 1){
-            String[] encrypted = scytaleEncrypt(input, turns);
-            for (String s : encrypted){ 
+            String[] encrypted1 = scytaleEncrypt(input, turns);
+            //String[] encrypted2 = cesarEncrypt(encrypted1);
+            for (String s : encrypted1){ 
                 System.out.println(s);
             }
         }
@@ -43,4 +44,19 @@ class front{
         }
         return ciphertext;
     }
+
+    //public static String[] cesarEncrypt(String[] encrypted1) {
+        //String[] hex = new String[256];
+        //for (int i = 0; i < 256; i++) {
+            //hex[i] = String.format("%02X", i);
+        //}
+
+        
+
+        //for (int i = 0; i < arr.length; i++) {
+            //if (arr[i] == target) {
+                //return i;
+            //}
+        //}
+    //}
 }
