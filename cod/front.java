@@ -52,6 +52,8 @@ class front{
             hex[i] = String.format("%02X", i);
         }
 
+        String[] encrypted2 = new String[encrypted1.length];
+
         //for (String s : encrypted1){ 
         //    System.out.println("begin:" + s);
         //}
@@ -64,26 +66,8 @@ class front{
                     //    System.out.println(s + " outer cycle:" + j);
                     //}
             for (int i = 0; i < hex.length; i++) {
-                if (encrypted1[j].equals(hex[i])){
-                    System.out.println("encrip " + encrypted1[j]);
-                    System.out.println("hex " + hex[i]);
-                    int x=0;
-                    int y=i;
-
-                    while(x < 3){
-                        if (encrypted1[j].equals("FF")){
-                            encrypted1[j] = "00";
-                        }
-
-                        if (y == 255){
-                            y = 0;
-                        }
-                        y++;
-                        encrypted1[j] = hex[y];
-                        //System.out.println(x);
-                        x++;
-                    }
-                }
+                int y = (j + 3) % 256;
+                encrypted2[j] = hex[y];
             }
         }
     return encrypted1;
