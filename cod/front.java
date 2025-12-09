@@ -1,3 +1,6 @@
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
 class front{
     public static void main(String[] args) {
         int encrypt = 1;
@@ -84,3 +87,4 @@ class front{
         
     //}
 }
+
