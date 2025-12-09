@@ -1,8 +1,11 @@
 class front{
     public static void main(String[] args) {
         int encrypt = 1;
-        String[] input = {"4C", "6F", "73", "74"};
-        int turns = 3;
+        String string = "46 6F 72 20 47 6F 64 20 73 6F 20 6C 6F 76 65 64 20 74 68 65 20 77 6F 72 6C 64";
+        String seperator = "[\\s]";
+        String[] input = string.split(seperator);
+
+        int turns = 5; //online scytale + 1 = turns
 
         if(encrypt == 1){
             String[] encrypted1 = scytaleEncrypt(input, turns);
@@ -13,6 +16,7 @@ class front{
             for (String s : encrypted2){ 
                 System.out.println("cesar " + s);
             }
+            System.out.println(input.length);
         }
     }
 
@@ -76,5 +80,7 @@ class front{
         }
     return encrypted2;
     }
+    //public static String[] boxEncrypt(String[] encrypted1) {
+        
+    //}
 }
-
