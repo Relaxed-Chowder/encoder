@@ -57,16 +57,16 @@ class front{
         String[] encrypted2 = new String[encrypted1.length];
 
         //for (String s : encrypted1){ 
-        //    System.out.println("begin:" + s);
+            //System.out.println("begin:" + s);
         //}
 
         //String[] ciphertext;
         //ciphertext = new String[encrypted1.length];
 
         for (int j = 0; j < encrypted1.length; j++) {
-                    //for (String s : encrypted1){ 
-                    //    System.out.println(s + " outer cycle:" + j);
-                    //}
+            //for (String s : encrypted1){ 
+                //System.out.println(s + " outer cycle:" + j);
+            //}
             for (int i = 0; i < hex.length; i++) {
                 if(encrypted1[j].equals(hex[i])){
                     int y = (i + 3) % 256;
@@ -77,3 +77,4 @@ class front{
     return encrypted2;
     }
 }
+
