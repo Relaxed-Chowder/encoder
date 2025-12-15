@@ -11,9 +11,10 @@ class front{
             //System.out.println(i);
         //}
 
-        int turns = 5; //3-8 turns online scytale + 1 = turns
-        int shiftC = 3; //1 to 255
+        int turns = 5; //2-9 turns
+        int shiftC = 3; //1-255
         int[] rowKey = {0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3}; //0-3
+        int[] columnKey = {2,3,1,1}; //0-8
 
 
         if(encrypt == 1){
@@ -36,7 +37,10 @@ class front{
                     for (int j = 0; j < encrypted3[b][i].length; j++){
                         System.out.print(encrypted3[b][i][j] + " ");
                     }
+                System.out.println();
                 }
+            System.out.println("after");
+            System.out.println();
             }
         }
     }
@@ -109,10 +113,10 @@ class front{
         String[] encrypted3 = new String[encrypted2.length];
         //System.out.println("length " + encrypted2.length);
 
-        int blockSize = 16;
         int total = (int)Math.ceil(encrypted2.length / 16.0);
         //System.out.println("total " + total);
         String[][][] blocks = new String[total][4][4];
+        String[][][] blocks1 = new String[total][4][4];
 
         int index = 0;
 
@@ -157,6 +161,16 @@ class front{
                 }
             }
         }
+        //for (int b = 0; b < blocks.length; b++){
+            //for (int i = 0; i < blocks[b].length; i++){
+                //for (int j = 0; j < blocks[b][i].length; j++){
+                    //System.out.print(blocks[b][i][j] + " ");
+                //}
+            //System.out.println();
+            //}
+        //System.out.println("pre");
+        //System.out.println();
+        //}
         
         while(l < 4){
             for(int b = 0; b < total; b++){
@@ -170,11 +184,41 @@ class front{
                     }
                 }
             }
-            
+            //for (int b = 0; b < blocks.length; b++){
+                //for (int i = 0; i < blocks[b].length; i++){
+                    //for (int j = 0; j < blocks[b][i].length; j++){
+                        //System.out.print(blocks[b][i][j] + " ");
+                    //}
+                //System.out.println();
+                //}
+            //System.out.println("sub");
+            //System.out.println();
+            //}
+
+            for (int b = 0; b < blocks.length; b++) {
+                for (int i = 0; i < blocks[b].length; i++) {
+                    for (int j = 0; j < blocks[b][i].length; j++) {
+                        blocks1[b][i][j] = blocks[b][i][(j + rowKey[i+(b*4)]) % blocks[b].length];
+                    }
+                }
+            }
+            //for (int b = 0; b < blocks1.length; b++){
+                //for (int i = 0; i < blocks1[b].length; i++){
+                    //for (int j = 0; j < blocks1[b][i].length; j++){
+                        //System.out.print(blocks1[b][i][j] + " ");
+                    //}
+                //System.out.println();
+                //}
+            //System.out.println("row");
+            //System.out.println();
+            //}
+            int num = Integer.parseInt("FF",16);
+            System.out.println(num);
+
+
         l++;
         }
             
-    return blocks;
+    return blocks1;
     }
 }
-
