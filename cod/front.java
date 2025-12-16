@@ -1,5 +1,6 @@
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Arrays;
 
 class front{
     public static void main(String[] args) {
@@ -11,37 +12,29 @@ class front{
             //System.out.println(i);
         //}
 
-        int turns = 5; //2-9 turns
-        int shiftC = 3; //1-255
+        int turns = 5; //1-9 turns
+        int shiftC = 3; //0-255
         int[] rowKey = {0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3}; //0-3
-        int[] columnKey = {2,3,1,1}; //0-8
+        int[] columnKey = {2,3,1,1,1,2,3,1,1,1,2,3,3,1,1,2}; //0-8
+        int[] roundKey = {15,31,47,63,79,95,111,127,143,159,175,191,207,223,239,255}; //0-255
 
 
         if(encrypt == 1){
             String[] encrypted1 = scytaleEncrypt(input, turns);
-            for (String s : encrypted1){ 
-                System.out.println("scytale " + s);
-            }
+            System.out.println(Arrays.toString(encrypted1));
+            System.out.println("after scytale");
+            System.out.println();
 
             String[] encrypted2 = cesarEncrypt(encrypted1, shiftC);
-            for (String s : encrypted2){ 
-                System.out.println("cesar " + s);
-            }
-
-            String[][][] encrypted3 = boxEncrypt(encrypted2, rowKey);
-            //for (String s : encrypted3){ 
-                //System.out.println("BOX " + s);
-            //}
-            for (int b = 0; b < encrypted3.length; b++){
-                for (int i = 0; i < encrypted3[b].length; i++){
-                    for (int j = 0; j < encrypted3[b][i].length; j++){
-                        System.out.print(encrypted3[b][i][j] + " ");
-                    }
+                System.out.println(Arrays.toString(encrypted2));
+                System.out.println("after cesar");
                 System.out.println();
-                }
-            System.out.println("after");
+            
+
+            String[] encrypted3 = boxEncrypt(encrypted2, rowKey, columnKey, roundKey);
+            System.out.println(Arrays.toString(encrypted3));
+            System.out.println("after box");
             System.out.println();
-            }
         }
     }
 
@@ -107,16 +100,15 @@ class front{
     return encrypted2;
     }
 
-    public static String[][][] boxEncrypt(String[] encrypted2, int[] rowKey){
+    public static String[] boxEncrypt(String[] encrypted2, int[] rowKey, int[] columnKey, int[] roundKey){
         Map<String, String> Sbox = new LinkedHashMap<>();
-
-        String[] encrypted3 = new String[encrypted2.length];
-        //System.out.println("length " + encrypted2.length);
-
         int total = (int)Math.ceil(encrypted2.length / 16.0);
         //System.out.println("total " + total);
         String[][][] blocks = new String[total][4][4];
         String[][][] blocks1 = new String[total][4][4];
+
+        String[] encrypted3;
+        //System.out.println("length " + encrypted2.length);
 
         int index = 0;
 
@@ -179,7 +171,6 @@ class front{
                         if(blocks[b][i][j].equals(hex[i])){
                             String value = (String)Sbox.get(hex[i]);
                             blocks[b][i][j] = value;
-                            break;
                         }
                     }
                 }
@@ -198,7 +189,7 @@ class front{
             for (int b = 0; b < blocks.length; b++) {
                 for (int i = 0; i < blocks[b].length; i++) {
                     for (int j = 0; j < blocks[b][i].length; j++) {
-                        blocks1[b][i][j] = blocks[b][i][(j + rowKey[i+(b*4)]) % blocks[b].length];
+                        blocks1[b][i][j] = blocks[b][i][(j + rowKey[i+(l*4)]) % blocks[b].length];
                     }
                 }
             }
@@ -212,13 +203,55 @@ class front{
             //System.out.println("row");
             //System.out.println();
             //}
-            int num = Integer.parseInt("FF",16);
-            System.out.println(num);
+            for (int b = 0; b < blocks.length; b++) {
+                for (int i = 0; i < blocks[b].length; i++) {
+                    for (int j = 0; j < blocks[b][i].length; j++) {
+                        int num = Integer.parseInt(blocks[b][i][j],16);
+                        int bitwise = (num+columnKey[j+(l*4)])%256;
+                        //System.out.println("bitwise " + num + " " + bitwise);
+                        blocks[b][i][j] = hex[bitwise];
+                    }
+                }
+            }
 
+            //for (int b = 0; b < blocks.length; b++){
+                //for (int i = 0; i < blocks[b].length; i++){
+                    //for (int j = 0; j < blocks[b][i].length; j++){
+                        //System.out.print(blocks[b][i][j] + " ");
+                    //}
+                //System.out.println();
+                //}
+            //System.out.println("column");
+            //System.out.println();
+            //}
 
         l++;
         }
-            
-    return blocks1;
+        for (int b = 0; b < blocks.length; b++) {
+            for (int i = 0; i < blocks[b].length; i++) {
+                for (int j = 0; j < blocks[b][i].length; j++) {
+                    int num = Integer.parseInt(blocks[b][i][j],16);
+                    int bitwise = ~(num^roundKey[j]);
+                    if(bitwise<0){
+                        bitwise*=-1;
+                    }
+                    //System.out.println("bitwise " + num + " " + bitwise);
+                    blocks[b][i][j] = hex[bitwise];
+                }
+            }
+        }
+        //for (int b = 0; b < blocks.length; b++){
+            //for (int i = 0; i < blocks[b].length; i++){
+                //for (int j = 0; j < blocks[b][i].length; j++){
+                    //System.out.print(blocks[b][i][j] + " ");
+                //}
+            //System.out.println();
+            //}
+        //System.out.println("XNOR");
+        //System.out.println();
+        //}
+
+        encrypted3 = Arrays.stream(blocks).flatMap(Arrays::stream).flatMap(Arrays::stream).toArray(String[]::new);
+    return encrypted3;
     }
 }
