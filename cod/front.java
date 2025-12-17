@@ -1,16 +1,24 @@
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Arrays;
 
 class front{
     public static void main(String[] args) {
-        int encrypt = 1;
+        int encrypt = 2;
         String string = "46 6F 72 20 47 6F 64 20 73 6F 20 6C 6F 76 65 64 20 74 68 65 20 77 6F 72 6C 64";
         String seperator = "[\\s]";
         String[] input = string.split(seperator);
-        //for (int i = 0; i<input.length; i++){ 
-            //System.out.println(i);
+        //for (String s : input){ 
+            //System.out.print(s);
         //}
+        //System.out.println();
+
+        String out = "60 22 F7 BE 6A 27 B6 60 41 02 D4 93 51 56 3E D6 77 22 0F C6 4F 76 B6 A7 26 17 DA 92 44 FE B9 F9";
+        String[] deinput = out.split(seperator);
+        //for (String s : deinput){ 
+            //System.out.print(s);
+        //}
+        //System.out.println();
 
         int turns = 5; //1-9 turns
         int shiftC = 3; //0-255
@@ -26,19 +34,34 @@ class front{
             System.out.println();
 
             String[] encrypted2 = cesarEncrypt(encrypted1, shiftC);
-                System.out.println(Arrays.toString(encrypted2));
-                System.out.println("after cesar");
-                System.out.println();
+            System.out.println(Arrays.toString(encrypted2));
+            System.out.println("after cesar");
+            System.out.println();
             
 
             String[] encrypted3 = boxEncrypt(encrypted2, rowKey, columnKey, roundKey);
             System.out.println(Arrays.toString(encrypted3));
             System.out.println("after box");
             System.out.println();
+            int i = 0;
+            for(String s : encrypted3){
+                if(i%2 == 0){
+                    System.out.print(" ");
+                }
+                i++;
+                System.out.print(s);
+                i++;
+            }
+            System.out.println();
+            System.out.println("final");
+
+
+        }else if (encrypt == 2) {
+            String[] dencrypted = boxDencrypt(deinput, rowKey, columnKey, roundKey);
         }
     }
 
-    public static String[] scytaleEncrypt(String[] input, int turns) {
+    public static String[] scytaleEncrypt(String[] input, int turns){
         int columns = (int) Math.ceil((double) input.length / turns);
         String[][] grid = new String[turns][columns];
 
@@ -69,7 +92,7 @@ class front{
         return ciphertext;
     }
 
-    public static String[] cesarEncrypt(String[] encrypted1, int shiftC) {
+    public static String[] cesarEncrypt(String[] encrypted1, int shiftC){
         String[] hex = new String[256];
         for (int i = 0; i < 256; i++){
             hex[i] = String.format("%02X", i);
@@ -231,7 +254,7 @@ class front{
             for (int i = 0; i < blocks[b].length; i++) {
                 for (int j = 0; j < blocks[b][i].length; j++) {
                     int num = Integer.parseInt(blocks[b][i][j],16);
-                    int bitwise = ~(num^roundKey[j]);
+                    int bitwise = ~(num^roundKey[i+(j*4)]);
                     if(bitwise<0){
                         bitwise*=-1;
                     }
@@ -251,7 +274,47 @@ class front{
         //System.out.println();
         //}
 
-        encrypted3 = Arrays.stream(blocks).flatMap(Arrays::stream).flatMap(Arrays::stream).toArray(String[]::new);
+    encrypted3 = Arrays.stream(blocks).flatMap(Arrays::stream).flatMap(Arrays::stream).toArray(String[]::new);
     return encrypted3;
+    }
+
+    public static String[] boxDencrypt(String[] input, int[] rowKey, int[] columnKey, int[] roundKey){
+        String[] hex = new String[256];
+        for (int i = 0; i < 256; i++){
+            hex[i] = String.format("%02X", i);
+        }
+
+        int index = 0;
+
+        int total = (int)Math.ceil(input.length / 16.0);
+        String[] NORarray = new String[input.length];
+
+        String[][][] blocks = new String[total][4][4];
+
+        for(int b = 0; b < total; b++){
+            for(int i = 0; i < 4; i++){
+                for(int j = 0; j < 4; j++){
+                    if(index < input.length){
+                        blocks[b][i][j] = input[index];
+                    }else{
+                        blocks[b][i][j] = "00"; // padding
+                    }
+
+                index++;
+                }
+            }
+        }
+        for (int b = 0; b < blocks.length; b++){
+            for (int i = 0; i < blocks[b].length; i++){
+                for (int j = 0; j < blocks[b][i].length; j++){
+                    System.out.print(blocks[b][i][j] + " ");
+                }
+            System.out.println();
+            }
+        System.out.println("pre");
+        System.out.println();
+        }
+
+    return NORarray;
     }
 }
