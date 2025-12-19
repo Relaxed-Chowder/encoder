@@ -30,24 +30,6 @@ class front{
         int[] columnKey = {2,3,1,1,1,2,3,1,1,1,2,3,3,1,1,2}; //0-9
         int[] roundKey = {15,31,47,63,79,95,111,127,143,159,175,191,207,223,239,255}; //0-255
 
-        /*
-        int[] RrowKey = new int[rowKey.length];
-        int[] RcolumnKey = new int[columnKey.length];
-        int[] RroundKey = new int[roundKey.length];
-
-        for (int i = 0; i < rowKey.length; i++){
-            RrowKey[i] = rowKey[rowKey.length - i - 1];
-        }
-        for (int i = 0; i < columnKey.length; i++){
-            RcolumnKey[i] = columnKey[columnKey.length - i - 1];
-        }
-        for (int i = 0; i < roundKey.length; i++){
-            RroundKey[i] = roundKey[roundKey.length - i - 1];
-        }
-        */
-        
-
-
         if(encrypt == 1){
             String[] encrypted1 = scytaleEncrypt(input, turns);
             System.out.println(Arrays.toString(encrypted1));
@@ -79,6 +61,9 @@ class front{
 
         }else if (encrypt == 2) {
             String[] dencrypted = boxDencrypt(deinput, rowKey, columnKey, roundKey);
+            System.out.println(Arrays.toString(dencrypted));
+            System.out.println("after box");
+            System.out.println();
         }
     }
 
@@ -313,6 +298,8 @@ class front{
         String[] hex = new String[256];
         Map<String, String> boxS = new LinkedHashMap<>();
 
+        int total = (int)Math.ceil(input.length / 16.0);
+
         String[] box = {
             "52","09","6A","D5","30","36","A5","38","BF","40","A3","9E","81","F3","D7","FB",
             "7C","E3","39","82","9B","2F","FF","87","34","8E","43","44","C4","DE","E9","CB",
@@ -334,16 +321,16 @@ class front{
 
         for (int i = 0; i < 256; i++){
             hex[i] = String.format("%02X", i);
-            String key = String.format("%02X", i);
-            boxS.put(key, box[i]);
+            boxS.put(box[i], hex[i]);
         }
-        System.out.print(boxS.get(52));
+        //System.out.println(boxS.get("52"));
 
         int index = 0;
 
         int l = 0;
 
-        int total = (int)Math.ceil(input.length / 16.0);
+        String[] dencrypted = new String[total*4*4];
+        String[] boxtext;
         String[] NORarray = new String[input.length];
 
         String[][][] blocks = new String[total][4][4];
@@ -445,9 +432,9 @@ class front{
                 }
             }
             
-            for (int b = 0; b < blocks.length; b++){
-                for (int i = 0; i < blocks[b].length; i++){
-                    for (int j = 0; j < blocks[b][i].length; j++){
+            for(int b = 0; b < blocks.length; b++){
+                for(int i = 0; i < blocks[b].length; i++){
+                    for(int j = 0; j < blocks[b][i].length; j++){
                         System.out.print(blocks[b][i][j] + " ");
                     }
                     System.out.println();
@@ -457,6 +444,15 @@ class front{
             }
             l++;
         }
-    return NORarray;
+    boxtext = Arrays.stream(blocks).flatMap(Arrays::stream).flatMap(Arrays::stream).toArray(String[]::new);
+
+    for(int i = 0; i < boxtext.length; i++){
+        if(!(boxtext[i].equals("00"))){
+            dencrypted[i] = boxtext[i];
+        }
+
+    }
+
+    return dencrypted;
     }
 }
