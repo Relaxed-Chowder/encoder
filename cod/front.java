@@ -8,23 +8,44 @@ class front{
         String string = "46 6F 72 20 47 6F 64 20 73 6F 20 6C 6F 76 65 64 20 74 68 65 20 77 6F 72 6C 64";
         String seperator = "[\\s]";
         String[] input = string.split(seperator);
-        //for (String s : input){ 
-            //System.out.print(s);
-        //}
-        //System.out.println();
+        /*
+        for (String s : input){ 
+            System.out.print(s);
+        }
+        System.out.println();
+        */
 
-        String out = "60 22 F7 BE 6A 27 B6 60 41 02 D4 93 51 56 3E D6 77 22 0F C6 4F 76 B6 A7 26 17 DA 92 44 FE B9 F9";
+        String out = "A0 DE 09 42 96 D9 4A A0 BF FE 2C 6D AF AA C2 2A 89 DE F1 3A B1 8A 4A 59 DA E9 26 6E BC 02 47 07";
         String[] deinput = out.split(seperator);
-        //for (String s : deinput){ 
-            //System.out.print(s);
-        //}
-        //System.out.println();
+        /*
+        for (String s : deinput){ 
+            System.out.println(s);
+        }
+        System.out.println();
+        */
 
         int turns = 5; //1-9 turns
         int shiftC = 3; //0-255
         int[] rowKey = {0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3}; //0-3
-        int[] columnKey = {2,3,1,1,1,2,3,1,1,1,2,3,3,1,1,2}; //0-8
+        int[] columnKey = {2,3,1,1,1,2,3,1,1,1,2,3,3,1,1,2}; //0-9
         int[] roundKey = {15,31,47,63,79,95,111,127,143,159,175,191,207,223,239,255}; //0-255
+
+        /*
+        int[] RrowKey = new int[rowKey.length];
+        int[] RcolumnKey = new int[columnKey.length];
+        int[] RroundKey = new int[roundKey.length];
+
+        for (int i = 0; i < rowKey.length; i++){
+            RrowKey[i] = rowKey[rowKey.length - i - 1];
+        }
+        for (int i = 0; i < columnKey.length; i++){
+            RcolumnKey[i] = columnKey[columnKey.length - i - 1];
+        }
+        for (int i = 0; i < roundKey.length; i++){
+            RroundKey[i] = roundKey[roundKey.length - i - 1];
+        }
+        */
+        
 
 
         if(encrypt == 1){
@@ -100,17 +121,21 @@ class front{
 
         String[] encrypted2 = new String[encrypted1.length];
 
-        //for (String s : encrypted1){ 
-            //System.out.println("begin:" + s);
-        //}
+        /*
+        for (String s : encrypted1){ 
+            System.out.println("begin:" + s);
+        }
 
-        //String[] ciphertext;
-        //ciphertext = new String[encrypted1.length];
+        String[] ciphertext;
+        ciphertext = new String[encrypted1.length];
+        */
 
         for (int j = 0; j < encrypted1.length; j++){
-            //for (String s : encrypted1){ 
-                //System.out.println(s + " outer cycle:" + j);
-            //}
+            /*
+            for (String s : encrypted1){ 
+                System.out.println(s + " outer cycle:" + j);
+            }
+            */
             for (int i = 0; i < hex.length; i++){
                 if(encrypted1[j].equals(hex[i])){
                     int y = (i + shiftC) % 256;
@@ -172,20 +197,22 @@ class front{
                         blocks[b][i][j] = "00"; // padding
                     }
 
-                index++;
+                    index++;
                 }
             }
         }
-        //for (int b = 0; b < blocks.length; b++){
-            //for (int i = 0; i < blocks[b].length; i++){
-                //for (int j = 0; j < blocks[b][i].length; j++){
-                    //System.out.print(blocks[b][i][j] + " ");
-                //}
-            //System.out.println();
-            //}
-        //System.out.println("pre");
-        //System.out.println();
-        //}
+        /*
+        for (int b = 0; b < blocks.length; b++){
+            for (int i = 0; i < blocks[b].length; i++){
+                for (int j = 0; j < blocks[b][i].length; j++){
+                    System.out.print(blocks[b][i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println("pre");
+            System.out.println();
+        }
+        */
         
         while(l < 4){
             for(int b = 0; b < total; b++){
@@ -198,16 +225,18 @@ class front{
                     }
                 }
             }
-            //for (int b = 0; b < blocks.length; b++){
-                //for (int i = 0; i < blocks[b].length; i++){
-                    //for (int j = 0; j < blocks[b][i].length; j++){
-                        //System.out.print(blocks[b][i][j] + " ");
-                    //}
-                //System.out.println();
-                //}
-            //System.out.println("sub");
-            //System.out.println();
-            //}
+            /*
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        System.out.print(blocks[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("sub");
+                System.out.println();
+            }
+            */
 
             for (int b = 0; b < blocks.length; b++) {
                 for (int i = 0; i < blocks[b].length; i++) {
@@ -216,16 +245,19 @@ class front{
                     }
                 }
             }
-            //for (int b = 0; b < blocks1.length; b++){
-                //for (int i = 0; i < blocks1[b].length; i++){
-                    //for (int j = 0; j < blocks1[b][i].length; j++){
-                        //System.out.print(blocks1[b][i][j] + " ");
-                    //}
-                //System.out.println();
-                //}
-            //System.out.println("row");
-            //System.out.println();
-            //}
+            /*
+            for (int b = 0; b < blocks1.length; b++){
+                for (int i = 0; i < blocks1[b].length; i++){
+                    for (int j = 0; j < blocks1[b][i].length; j++){
+                        System.out.print(blocks1[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("row");
+                System.out.println();
+            }
+            */
+            
             for (int b = 0; b < blocks.length; b++) {
                 for (int i = 0; i < blocks[b].length; i++) {
                     for (int j = 0; j < blocks[b][i].length; j++) {
@@ -236,85 +268,195 @@ class front{
                     }
                 }
             }
-
-            //for (int b = 0; b < blocks.length; b++){
-                //for (int i = 0; i < blocks[b].length; i++){
-                    //for (int j = 0; j < blocks[b][i].length; j++){
-                        //System.out.print(blocks[b][i][j] + " ");
-                    //}
-                //System.out.println();
-                //}
-            //System.out.println("column");
-            //System.out.println();
-            //}
-
-        l++;
+            /*
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        System.out.print(blocks[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("column");
+                System.out.println();
+            }
+            */
+            
+            l++;
         }
         for (int b = 0; b < blocks.length; b++) {
             for (int i = 0; i < blocks[b].length; i++) {
                 for (int j = 0; j < blocks[b][i].length; j++) {
                     int num = Integer.parseInt(blocks[b][i][j],16);
-                    int bitwise = ~(num^roundKey[i+(j*4)]);
-                    if(bitwise<0){
-                        bitwise*=-1;
-                    }
+                    int bitwise = ~(num ^ roundKey[i + (j * 4)]) & 0xFF;
                     //System.out.println("bitwise " + num + " " + bitwise);
                     blocks[b][i][j] = hex[bitwise];
                 }
             }
         }
-        //for (int b = 0; b < blocks.length; b++){
-            //for (int i = 0; i < blocks[b].length; i++){
-                //for (int j = 0; j < blocks[b][i].length; j++){
-                    //System.out.print(blocks[b][i][j] + " ");
-                //}
-            //System.out.println();
-            //}
-        //System.out.println("XNOR");
-        //System.out.println();
-        //}
-
+        /*
+        for (int b = 0; b < blocks.length; b++){
+            for (int i = 0; i < blocks[b].length; i++){
+                for (int j = 0; j < blocks[b][i].length; j++){
+                    System.out.print(blocks[b][i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println("XNOR");
+            System.out.println();
+        }
+        */
     encrypted3 = Arrays.stream(blocks).flatMap(Arrays::stream).flatMap(Arrays::stream).toArray(String[]::new);
     return encrypted3;
     }
 
     public static String[] boxDencrypt(String[] input, int[] rowKey, int[] columnKey, int[] roundKey){
         String[] hex = new String[256];
+        Map<String, String> boxS = new LinkedHashMap<>();
+
+        String[] box = {
+            "52","09","6A","D5","30","36","A5","38","BF","40","A3","9E","81","F3","D7","FB",
+            "7C","E3","39","82","9B","2F","FF","87","34","8E","43","44","C4","DE","E9","CB",
+            "54","7B","94","32","A6","C2","23","3D","EE","4C","95","0B","42","FA","C3","4E",
+            "08","2E","A1","66","28","D9","24","B2","76","5B","A2","49","6D","8B","D1","25",
+            "72","F8","F6","64","86","68","98","16","D4","A4","5C","CC","5D","65","B6","92",
+            "6C","70","48","50","FD","ED","B9","DA","5E","15","46","57","A7","8D","9D","84",
+            "90","D8","AB","00","8C","BC","D3","0A","F7","E4","58","05","B8","B3","45","06",
+            "D0","2C","1E","8F","CA","3F","0F","02","C1","AF","BD","03","01","13","8A","6B",
+            "3A","91","11","41","4F","67","DC","EA","97","F2","CF","CE","F0","B4","E6","73",
+            "96","AC","74","22","E7","AD","35","85","E2","F9","37","E8","1C","75","DF","6E",
+            "47","F1","1A","71","1D","29","C5","89","6F","B7","62","0E","AA","18","BE","1B",
+            "FC","56","3E","4B","C6","D2","79","20","9A","DB","C0","FE","78","CD","5A","F4",
+            "1F","DD","A8","33","88","07","C7","31","B1","12","10","59","27","80","EC","5F",
+            "60","51","7F","A9","19","B5","4A","0D","2D","E5","7A","9F","93","C9","9C","EF",
+            "A0","E0","3B","4D","AE","2A","F5","B0","C8","EB","BB","3C","83","53","99","61",
+            "17","2B","04","7E","BA","77","D6","26","E1","69","14","63","55","21","0C","7D"
+        };
+
         for (int i = 0; i < 256; i++){
             hex[i] = String.format("%02X", i);
+            String key = String.format("%02X", i);
+            boxS.put(key, box[i]);
         }
+        System.out.print(boxS.get(52));
 
         int index = 0;
+
+        int l = 0;
 
         int total = (int)Math.ceil(input.length / 16.0);
         String[] NORarray = new String[input.length];
 
         String[][][] blocks = new String[total][4][4];
+        String[][][] blocks1 = new String[total][4][4];
 
         for(int b = 0; b < total; b++){
             for(int i = 0; i < 4; i++){
                 for(int j = 0; j < 4; j++){
-                    if(index < input.length){
-                        blocks[b][i][j] = input[index];
-                    }else{
-                        blocks[b][i][j] = "00"; // padding
-                    }
-
-                index++;
+                    blocks[b][i][j] = input[index];
+                    index++;
                 }
             }
         }
+        /*
         for (int b = 0; b < blocks.length; b++){
             for (int i = 0; i < blocks[b].length; i++){
                 for (int j = 0; j < blocks[b][i].length; j++){
                     System.out.print(blocks[b][i][j] + " ");
                 }
-            System.out.println();
+                System.out.println();
             }
-        System.out.println("pre");
-        System.out.println();
+            System.out.println("pre");
+            System.out.println();
         }
+        */
 
+        for (int b = 0; b < blocks.length; b++) {
+            for (int i = 0; i < blocks[b].length; i++) {
+                for (int j = 0; j < blocks[b][i].length; j++) {
+                    int num = Integer.parseInt(blocks[b][i][j],16);
+                    int bitwise = ~(num ^ roundKey[i + (j * 4)]) & 0xFF;
+                    //System.out.println("bitwise " + num + " " + bitwise);
+                    blocks[b][i][j] = hex[bitwise];
+                }
+            }
+        }
+        /*
+        for (int b = 0; b < blocks.length; b++){
+            for (int i = 0; i < blocks[b].length; i++){
+                for (int j = 0; j < blocks[b][i].length; j++){
+                    System.out.print(blocks[b][i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println("XNOR");
+            System.out.println();
+        }
+        */
+        while(l < 4){
+            for (int b = 0; b < blocks.length; b++) {
+                for (int i = 0; i < blocks[b].length; i++) {
+                    for (int j = 0; j < blocks[b][i].length; j++) {
+                        int num = Integer.parseInt(blocks[b][i][j], 16);
+                        int bitwise = (num-columnKey[j+(l*4)]+256)%256;
+                        //System.out.println("bitwise " + num + " " + bitwise);
+                        blocks[b][i][j] = hex[bitwise];
+                    }
+                }
+            }
+            
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        System.out.print(blocks[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("column");
+                System.out.println();
+            }
+            
+            for (int b = 0; b < blocks.length; b++) {
+                for (int i = 0; i < blocks[b].length; i++) {
+                    for (int j = 0; j < blocks[b][i].length; j++) {
+                        blocks1[b][i][j] = blocks[b][i][((j - rowKey[i+(l*4)])+4)%4];
+                    }
+                }
+            }
+            /*
+            for (int b = 0; b < blocks1.length; b++){
+                for (int i = 0; i < blocks1[b].length; i++){
+                    for (int j = 0; j < blocks1[b][i].length; j++){
+                        System.out.print(blocks1[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("row");
+                System.out.println();
+            }
+            */
+            for(int b = 0; b < total; b++){
+                for(int i = 0; i < 4; i++){
+                    for(int j = 0; j < 4; j++){
+                        if(blocks1[b][i][j].equals(hex[i])){
+                            String value = (String)boxS.get(hex[i]);
+                            blocks[b][i][j] = value;
+                        }
+                    }
+                }
+            }
+            
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        System.out.print(blocks[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("sub");
+                System.out.println();
+            }
+            l++;
+        }
     return NORarray;
     }
 }
