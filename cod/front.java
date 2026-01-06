@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 class front{
     public static void main(String[] args) {
-        int encrypt = 2;
+        int encrypt = 1;
         String string = "46 6F 72 20 47 6F 64 20 73 6F 20 6C 6F 76 65 64 20 74 68 65 20 77 6F 72 6C 64";
         String seperator = "[\\s]";
         String[] input = string.split(seperator);
@@ -223,9 +224,9 @@ class front{
             }
             */
 
-            for (int b = 0; b < blocks.length; b++) {
-                for (int i = 0; i < blocks[b].length; i++) {
-                    for (int j = 0; j < blocks[b][i].length; j++) {
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
                         blocks1[b][i][j] = blocks[b][i][(j + rowKey[i+(l*4)]) % blocks[b].length];
                     }
                 }
@@ -243,9 +244,9 @@ class front{
             }
             */
             
-            for (int b = 0; b < blocks.length; b++) {
-                for (int i = 0; i < blocks[b].length; i++) {
-                    for (int j = 0; j < blocks[b][i].length; j++) {
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
                         int num = Integer.parseInt(blocks[b][i][j],16);
                         int bitwise = (num+columnKey[j+(l*4)])%256;
                         //System.out.println("bitwise " + num + " " + bitwise);
@@ -329,7 +330,7 @@ class front{
 
         int l = 0;
 
-        String[] dencrypted = new String[total*4*4];
+        ArrayList<String> dencrypted = new ArrayList<String>();
         String[] boxtext;
         String[] NORarray = new String[input.length];
 
@@ -425,8 +426,8 @@ class front{
                 for(int i = 0; i < 4; i++){
                     for(int j = 0; j < 4; j++){
                         if(blocks1[b][i][j].equals(hex[i])){
-                            String value = (String)boxS.get(hex[i]);
-                            blocks[b][i][j] = value;
+                            String value = blocks1[b][i][j];
+                            blocks[b][i][j] = boxS.get(value);
                         }
                     }
                 }
@@ -446,13 +447,13 @@ class front{
         }
     boxtext = Arrays.stream(blocks).flatMap(Arrays::stream).flatMap(Arrays::stream).toArray(String[]::new);
 
-    for(int i = 0; i < boxtext.length; i++){
-        if(!(boxtext[i].equals("00"))){
-            dencrypted[i] = boxtext[i];
-        }
-
+    for(String s : boxtext){
+        dencrypted.add(s);
+        dencrypted.remove("00");
     }
 
-    return dencrypted;
+    String[] dencrypted1 = dencrypted.toArray(new String[0]);
+
+    return dencrypted1;
     }
 }
