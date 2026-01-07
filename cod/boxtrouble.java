@@ -30,12 +30,12 @@ class front{
         int[] roundKey = {15,31,47,63,79,95,111,127,143,159,175,191,207,223,239,255}; //0-255
 
         if(encrypt == 1){
-            String[] string = boxEncrypt(string, rowKey, columnKey, roundKey);
-            System.out.println(Arrays.toString(string));
+            String[] encrypted = boxEncrypt(input, rowKey, columnKey, roundKey);
+            System.out.println(Arrays.toString(encrypted));
             System.out.println("after box");
             System.out.println();
             int i = 0;
-            for(String s : string){
+            for(String s : encrypted){
                 if(i%2 == 0){
                     System.out.print(" ");
                 }
@@ -48,10 +48,16 @@ class front{
 
 
         }else if (encrypt == 2) {
-            String[] string = boxDencrypt(deinput, rowKey, columnKey, roundKey);
-            System.out.println(Arrays.toString(string));
+            String[] decrypted = boxDencrypt(input, rowKey, columnKey, roundKey);
+            System.out.println(Arrays.toString(decrypted));
             System.out.println("after box");
             System.out.println();
         }
     }
+     public static String[] boxEncrypt(String[] encrypted2, int[] rowKey, int[] columnKey, int[] roundKey){
+        return encrypted;
+     }
+     public static String[] boxDencrypt(String[] input, int[] rowKey, int[] columnKey, int[] roundKey){
+        return decrypted;
+     }
 }
