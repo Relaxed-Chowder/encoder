@@ -6,7 +6,7 @@ import java.util.Map;
 class front{
     public static void main(String[] args) {
         int encrypt = 1;
-        String string = "52 69 6A 6E 64 61 65 6C";
+        String string = "52 69 6A 6E 64 61 65 6C 2D";
         String seperator = "[\\s]";
         String[] input = string.split(seperator);
         /*
