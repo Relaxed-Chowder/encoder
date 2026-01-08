@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -61,6 +60,8 @@ class boxtrouble{
         String[][][] blocks = new String[total][4][4];
         int index = 0;
 
+        int subc = 0;
+
         String[] box = {
             "63","7C","77","7B","F2","6B","6F","C5","30","01","67","2B","FE","D7","AB","76",
             "CA","82","C9","7D","FA","59","47","F0","AD","D4","A2","AF","9C","A4","72","C0",
@@ -101,6 +102,8 @@ class boxtrouble{
                 }
             }
         }
+        
+        // check box
         for (int b = 0; b < blocks.length; b++){
             for (int i = 0; i < blocks[b].length; i++){
                 for (int j = 0; j < blocks[b][i].length; j++){
@@ -109,6 +112,33 @@ class boxtrouble{
                 System.out.println();
             }
             System.out.println("box");
+            System.out.println();
+        }
+        
+        // subsitution
+        for(int b = 0; b < total; b++){
+            for(int i = 0; i < 4; i++){
+                for(int j = 0; j < 4; j++){
+                    for(String s : blocks[b][i]){
+                        if(blocks[b][i][j].equals(hex[subc])){
+                            String value = (String)Sbox.get(hex[subc]);
+                            blocks[b][i][j] = value;
+                        }
+                    subc++;
+                    }
+                }
+            }
+        }
+
+        // check subsitution
+        for (int b = 0; b < blocks.length; b++){
+            for (int i = 0; i < blocks[b].length; i++){
+                for (int j = 0; j < blocks[b][i].length; j++){
+                    System.out.print(blocks[b][i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println("sub");
             System.out.println();
         }
 
@@ -155,10 +185,7 @@ class boxtrouble{
                 for(int j = 0; j < 4; j++){
                     if(index < input.length){
                         blocks[b][i][j] = input[index];
-                    }else{
-                        blocks[b][i][j] = "00"; // padding
                     }
-
                     index++;
                 }
             }
