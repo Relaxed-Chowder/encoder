@@ -58,6 +58,7 @@ class boxtrouble{
 
         int total = (int)Math.ceil(encrypted2.length / 16.0);
         String[][][] blocks = new String[total][4][4];
+        String[][][] blocks1 = new String[total][4][4];
         int index = 0;
 
         int subc = 0;
@@ -98,11 +99,12 @@ class boxtrouble{
                         blocks[b][i][j] = "00"; // padding
                     }
 
-                    index++;
+                index++;
                 }
             }
         }
         
+        /*
         // check box
         for (int b = 0; b < blocks.length; b++){
             for (int i = 0; i < blocks[b].length; i++){
@@ -114,31 +116,50 @@ class boxtrouble{
             System.out.println("box");
             System.out.println();
         }
+        */
         
         // subsitution
         for(int b = 0; b < total; b++){
             for(int i = 0; i < 4; i++){
                 for(int j = 0; j < 4; j++){
-                    for(String s : blocks[b][i]){
-                        if(blocks[b][i][j].equals(hex[subc])){
-                            String value = (String)Sbox.get(hex[subc]);
-                            blocks[b][i][j] = value;
-                        }
-                    subc++;
-                    }
+                    String value = blocks[b][i][j];
+                    blocks[b][i][j] = Sbox.get(value);
                 }
             }
         }
 
+        
         // check subsitution
-        for (int b = 0; b < blocks.length; b++){
-            for (int i = 0; i < blocks[b].length; i++){
-                for (int j = 0; j < blocks[b][i].length; j++){
+        for(int b = 0; b < blocks.length; b++){
+            for(int i = 0; i < blocks[b].length; i++){
+                for(int j = 0; j < blocks[b][i].length; j++){
                     System.out.print(blocks[b][i][j] + " ");
                 }
                 System.out.println();
             }
             System.out.println("sub");
+            System.out.println();
+        }
+        
+
+        // row shift
+        for (int b = 0; b < blocks.length; b++){
+            for (int i = 0; i < blocks[b].length; i++){
+                for (int j = 0; j < blocks[b][i].length; j++){
+                    blocks1[b][i][j] = blocks[b][i][(j + rowKey[i+(0*4)]) % blocks[b].length];
+                }
+            }
+        }
+
+        // check row
+        for(int b = 0; b < blocks1.length; b++){
+            for(int i = 0; i < blocks1[b].length; i++){
+                for(int j = 0; j < blocks1[b][i].length; j++){
+                    System.out.print(blocks1[b][i][j] + " ");
+                }
+                System.out.println();
+            }
+            System.out.println("row");
             System.out.println();
         }
 
@@ -174,7 +195,7 @@ class boxtrouble{
         };
 
         String[] hex = new String[256];
-        for (int i = 0; i < 256; i++){
+        for(int i = 0; i < 256; i++){
             hex[i] = String.format("%02X", i);
             String box = String.format("%02X", i);
             boxS.put(box, S[i]);
@@ -186,10 +207,15 @@ class boxtrouble{
                     if(index < input.length){
                         blocks[b][i][j] = input[index];
                     }
-                    index++;
+
+                index++;
                 }
             }
         }
+
+        return blocks;
+     }
+}
 
         return blocks;
      }
