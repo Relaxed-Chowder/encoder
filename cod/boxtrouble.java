@@ -27,6 +27,7 @@ class boxtrouble{
         int[] rowKey = {0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3}; //0-3
         int[] columnKey = {2,3,1,1,1,2,3,1,1,1,2,3,3,1,1,2}; //0-9
         int[] roundKey = {15,31,47,63,79,95,111,127,143,159,175,191,207,223,239,255}; //0-255
+        // change round key too hexadecimal
 
         if(encrypt == 1){
             String[][][] encrypted = boxEncrypt(input, rowKey, columnKey, roundKey);
@@ -62,6 +63,8 @@ class boxtrouble{
         int index = 0;
 
         int subc = 0;
+
+        int l = 0;
 
         String[] box = {
             "63","7C","77","7B","F2","6B","6F","C5","30","01","67","2B","FE","D7","AB","76",
@@ -117,53 +120,103 @@ class boxtrouble{
             System.out.println();
         }
         */
-        
-        // subsitution
-        for(int b = 0; b < total; b++){
-            for(int i = 0; i < 4; i++){
-                for(int j = 0; j < 4; j++){
-                    String value = blocks[b][i][j];
-                    blocks[b][i][j] = Sbox.get(value);
+        while(l<1){
+            // subsitution
+            for(int b = 0; b < total; b++){
+                for(int i = 0; i < 4; i++){
+                    for(int j = 0; j < 4; j++){
+                        String value = blocks[b][i][j];
+                        blocks[b][i][j] = Sbox.get(value);
+                    }
                 }
             }
-        }
 
-        
-        // check subsitution
-        for(int b = 0; b < blocks.length; b++){
-            for(int i = 0; i < blocks[b].length; i++){
-                for(int j = 0; j < blocks[b][i].length; j++){
-                    System.out.print(blocks[b][i][j] + " ");
+            
+            // check subsitution
+            for(int b = 0; b < blocks.length; b++){
+                for(int i = 0; i < blocks[b].length; i++){
+                    for(int j = 0; j < blocks[b][i].length; j++){
+                        System.out.print(blocks[b][i][j] + " ");
+                    }
+                    System.out.println();
                 }
+                System.out.println("sub");
                 System.out.println();
             }
-            System.out.println("sub");
-            System.out.println();
-        }
-        
-
-        // row shift
-        for (int b = 0; b < blocks.length; b++){
-            for (int i = 0; i < blocks[b].length; i++){
-                for (int j = 0; j < blocks[b][i].length; j++){
-                    blocks1[b][i][j] = blocks[b][i][(j + rowKey[i+(0*4)]) % blocks[b].length];
+            
+            // row shift
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        blocks1[b][i][j] = blocks[b][i][(j + rowKey[i+(l*4)]) % blocks[b].length];
+                    }
                 }
             }
-        }
 
-        // check row
-        for(int b = 0; b < blocks1.length; b++){
-            for(int i = 0; i < blocks1[b].length; i++){
-                for(int j = 0; j < blocks1[b][i].length; j++){
-                    System.out.print(blocks1[b][i][j] + " ");
+            // check row
+            for(int b = 0; b < blocks1.length; b++){
+                for(int i = 0; i < blocks1[b].length; i++){
+                    for(int j = 0; j < blocks1[b][i].length; j++){
+                        System.out.print(blocks1[b][i][j] + " ");
+                    }
+                    System.out.println();
                 }
+                System.out.println("row");
                 System.out.println();
             }
-            System.out.println("row");
-            System.out.println();
+
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        int num = Integer.parseInt(blocks[b][i][j],16);
+                        int bitwise = (num+columnKey[j+(l*4)])%256;
+                        //System.out.println("bitwise " + num + " " + bitwise);
+                        blocks[b][i][j] = hex[bitwise];
+                    }
+                }
+            }
+
+            
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        System.out.print(blocks[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("column");
+                System.out.println();
+            }
+            
+            
+
+        l++;
         }
 
-        return blocks;
+    for (int b = 0; b < blocks.length; b++) {
+        for (int i = 0; i < blocks[b].length; i++) {
+            for (int j = 0; j < blocks[b][i].length; j++) {
+                int num = Integer.parseInt(blocks[b][i][j],16);
+                int bitwise = ~(num ^ roundKey[i + (j * 4)]) & 0xFF;
+                System.out.println("bitwise " + num + " " + bitwise);
+                blocks[b][i][j] = hex[bitwise];
+            }
+        }
+    }
+    
+    for (int b = 0; b < blocks.length; b++){
+        for (int i = 0; i < blocks[b].length; i++){
+            for (int j = 0; j < blocks[b][i].length; j++){
+                System.out.print(blocks[b][i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("XNOR");
+        System.out.println();
+    }
+    
+
+    return blocks;
     }
 
 
@@ -212,10 +265,6 @@ class boxtrouble{
                 }
             }
         }
-
-        return blocks;
-     }
-}
 
         return blocks;
      }
