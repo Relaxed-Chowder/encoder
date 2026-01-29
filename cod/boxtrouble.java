@@ -4,8 +4,9 @@ import java.util.Map;
 
 class boxtrouble{
     public static void main(String[] args) {
-        int encrypt = 1;
-        String string = "2D 52 69 6A 6E 64 61 65 6C 2A 2D 52 69 6A 6E 64 61 65 6C 3D 52 69 6A 6E 64 61 65 6C";
+        int encrypt = 2;
+        //String string = "2D 52 69 6A 6E 64 61 65 6C 2A 2D 52 69 6A 6E 64 61 65 6C 3D 52 69 6A 6E 64 61 65 6C";
+        String string = "36 E9 14 04 FF 23 91 84 3B F7 A1 44 F7 3D D1 06 54 E6 E7 67 7E A3 65 C2 BB 1F E1 8B 2F FB 1B 15";
         String seperator = "[\\s]";
         String[] input = string.split(seperator);
         /*
@@ -36,8 +37,8 @@ class boxtrouble{
             System.out.println();
             int i = 0;
             for(String s : encrypted3){
-                if(i%2 == 0){
-                    System.out.print("");
+                if(i%2 == 0 && i != 0){
+                    System.out.print(" ");
                 }
                 i++;
                 System.out.print(s);
@@ -47,7 +48,7 @@ class boxtrouble{
             System.out.println("final");
 
 
-        }else if (encrypt == 2) {
+        }else if (encrypt == 2){
             String[][][] decrypted = boxDencrypt(input, rowKey, columnKey, roundKey);
             System.out.println(Arrays.toString(decrypted));
             System.out.println("after box");
@@ -108,8 +109,9 @@ class boxtrouble{
             }
         }
         
-        /*
+        
         // check box
+        /*
         for (int b = 0; b < blocks.length; b++){
             for (int i = 0; i < blocks[b].length; i++){
                 for (int j = 0; j < blocks[b][i].length; j++){
@@ -134,6 +136,7 @@ class boxtrouble{
 
             
             // check subsitution
+            /*
             for(int b = 0; b < blocks.length; b++){
                 for(int i = 0; i < blocks[b].length; i++){
                     for(int j = 0; j < blocks[b][i].length; j++){
@@ -144,6 +147,7 @@ class boxtrouble{
                 System.out.println("sub");
                 System.out.println();
             }
+            */
             
             // row shift
             for (int b = 0; b < blocks.length; b++){
@@ -155,6 +159,7 @@ class boxtrouble{
             }
 
             // check row
+            /*
             for(int b = 0; b < blocks1.length; b++){
                 for(int i = 0; i < blocks1[b].length; i++){
                     for(int j = 0; j < blocks1[b][i].length; j++){
@@ -165,6 +170,7 @@ class boxtrouble{
                 System.out.println("row");
                 System.out.println();
             }
+            */
 
             for (int b = 0; b < blocks.length; b++){
                 for (int i = 0; i < blocks[b].length; i++){
@@ -177,7 +183,8 @@ class boxtrouble{
                 }
             }
 
-            
+            // check column
+            /*
             for (int b = 0; b < blocks.length; b++){
                 for (int i = 0; i < blocks[b].length; i++){
                     for (int j = 0; j < blocks[b][i].length; j++){
@@ -188,6 +195,7 @@ class boxtrouble{
                 System.out.println("column");
                 System.out.println();
             }
+            */
 
             if(l > 0){
                 for (int b = 0; b < blocks.length; b++){
@@ -202,6 +210,8 @@ class boxtrouble{
                     }
                 }
 
+                /*
+                // check bitwise
                 for (int b = 0; b < blocks.length; b++){
                     for (int i = 0; i < blocks[b].length; i++){
                         for (int j = 0; j < blocks[b][i].length; j++){
@@ -212,6 +222,7 @@ class boxtrouble{
                 System.out.println("XNOR");
                 System.out.println();
                 }
+                */
             }
             
         l++;
@@ -229,6 +240,7 @@ class boxtrouble{
         int total = (int)Math.ceil(input.length / 16.0);
         String[][][] blocks = new String[total][4][4];
         int index = 0;
+        int l = 4;
 
         String[] S = {
             "52","09","6A","D5","30","36","A5","38","BF","40","A3","9E","81","F3","D7","FB",
@@ -250,12 +262,13 @@ class boxtrouble{
         };
 
         String[] hex = new String[256];
-        for(int i = 0; i < 256; i++){
+        for (int i = 0; i < 256; i++) {
             hex[i] = String.format("%02X", i);
             String box = String.format("%02X", i);
             boxS.put(box, S[i]);
         }
 
+        // creating box
         for(int b = 0; b < total; b++){
             for(int i = 0; i < 4; i++){
                 for(int j = 0; j < 4; j++){
@@ -268,6 +281,67 @@ class boxtrouble{
             }
         }
 
+        while(l>0){
+            if(l > 0){
+                for (int b = blocks.length; b > 0; b--){
+                    for (int i = blocks[b].length; i > 0; i--){
+                        for (int j = blocks[b][i].length; j > 0; j--){
+                            int num = Integer.parseInt(blocks[b][i][j],16);
+                            int key = Integer.parseInt(roundKey[j + (i * 4)],16);
+                            int bitwise = ~(num ^ key) & 0xFF;
+                            //System.out.println("bitwise " + num + " " + bitwise);
+                            blocks[b][i][j] = hex[bitwise];
+                        }
+                    }
+                }
+
+                // check bitwise
+                
+                for (int b = 0; b < blocks.length; b++){
+                    //System.out.println("l is " + l);
+                    for (int i = 0; i < blocks[b].length; i++){
+                        for (int j = 0; j < blocks[b][i].length; j++){
+                            System.out.print(blocks[b][i][j] + " ");
+                        }
+                    System.out.println();
+                    }
+                System.out.println("XNOR");
+                System.out.println();
+                }
+                
+
+            }
+
+            /*
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        int num = Integer.parseInt(blocks[b][i][j],16);
+                        int bitwise = (num+columnKey[j+(l*4)])%256;
+                        //System.out.println("bitwise " + num + " " + bitwise);
+                        blocks[b][i][j] = hex[bitwise];
+                    }
+                }
+            }
+            */
+
+            // check column
+            /*
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        System.out.print(blocks[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("column");
+                System.out.println();
+            }
+            */
+            l--;
+            }
+
         return blocks;
      }
 }
+
