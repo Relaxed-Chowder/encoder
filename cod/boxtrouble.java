@@ -234,7 +234,7 @@ class boxtrouble{
 
 
 
-     public static String[][][] boxDencrypt(String[] input, int[] rowKey, int[] columnKey, String[] roundKey){
+    public static String[][][] boxDencrypt(String[] input, int[] rowKey, int[] columnKey, String[] roundKey){
         Map<String, String> boxS = new LinkedHashMap<>();
 
         int total = (int)Math.ceil(input.length / 16.0);
@@ -281,11 +281,12 @@ class boxtrouble{
             }
         }
 
-        while(l>0){
+        while(l > 0){
             if(l > 0){
-                for (int b = blocks.length; b > 0; b--){
-                    for (int i = blocks[b].length; i > 0; i--){
-                        for (int j = blocks[b][i].length; j > 0; j--){
+                // bitwise
+                for (int b = blocks.length-1; b >= 0; b--){
+                    for (int i = blocks[b].length-1; i >= 0; i--){
+                        for (int j = blocks[b][i].length-1; j >= 0; j--){
                             int num = Integer.parseInt(blocks[b][i][j],16);
                             int key = Integer.parseInt(roundKey[j + (i * 4)],16);
                             int bitwise = ~(num ^ key) & 0xFF;
@@ -307,26 +308,27 @@ class boxtrouble{
                     }
                 System.out.println("XNOR");
                 System.out.println();
-                }
-                
-
+                } 
             }
 
-            /*
-            for (int b = 0; b < blocks.length; b++){
-                for (int i = 0; i < blocks[b].length; i++){
-                    for (int j = 0; j < blocks[b][i].length; j++){
+            // column
+            for (int b = blocks.length-1; b >= 0; b--){
+                for (int i = blocks[b].length-1; i >= 0; i--){
+                    for (int j = blocks[b][i].length-1; j >= 0; j--){
                         int num = Integer.parseInt(blocks[b][i][j],16);
-                        int bitwise = (num+columnKey[j+(l*4)])%256;
+                        int bitwise = (num-columnKey[j+(l*4)%16]);
+                        if(bitwise < 0){
+                            bitwise += 256;
+                        }
                         //System.out.println("bitwise " + num + " " + bitwise);
                         blocks[b][i][j] = hex[bitwise];
                     }
                 }
             }
-            */
+            
 
             // check column
-            /*
+            
             for (int b = 0; b < blocks.length; b++){
                 for (int i = 0; i < blocks[b].length; i++){
                     for (int j = 0; j < blocks[b][i].length; j++){
@@ -337,11 +339,10 @@ class boxtrouble{
                 System.out.println("column");
                 System.out.println();
             }
-            */
+            
             l--;
             }
 
         return blocks;
      }
 }
-
