@@ -25,8 +25,8 @@ class boxtrouble{
         System.out.println();
         */
 
-        int[] rowKey = {0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3}; //0-3
-        int[] columnKey = {2,3,1,1,1,2,3,1,1,1,2,3,3,1,1,2}; //0-9
+        int[][] rowKey = {{0,1,2,3},{0,1,2,3},{0,1,2,3},{0,1,2,3}}; //0-3
+        int[][] columnKey = {{2,3,1,1},{1,2,3,1},{1,1,2,3},{3,1,1,2}}; //0-9
         String[] roundKey = {"0F","1F","2F","3F","4F","5F","6F","7F","8F","9F","AF","BF","CF","DF","EF","71"}; //00-254
         // change round key too hexadecimal
 
@@ -55,7 +55,7 @@ class boxtrouble{
             System.out.println();
         }
     }
-     public static String[] boxEncrypt(String[] encrypted2, int[] rowKey, int[] columnKey, String[] roundKey){
+     public static String[] boxEncrypt(String[] encrypted2, int[][] rowKey, int[][] columnKey, String[] roundKey){
         Map<String, String> Sbox = new LinkedHashMap<>();
 
         int total = (int)Math.ceil(encrypted2.length / 16.0);
@@ -153,7 +153,7 @@ class boxtrouble{
             for (int b = 0; b < blocks.length; b++){
                 for (int i = 0; i < blocks[b].length; i++){
                     for (int j = 0; j < blocks[b][i].length; j++){
-                        blocks1[b][i][j] = blocks[b][i][(j + rowKey[i+(l*4)]) % blocks[b].length];
+                        blocks1[b][i][j] = blocks[b][i][(j + rowKey[l][j]) % blocks[b].length];
                     }
                 }
             }
@@ -176,7 +176,7 @@ class boxtrouble{
                 for (int i = 0; i < blocks[b].length; i++){
                     for (int j = 0; j < blocks[b][i].length; j++){
                         int num = Integer.parseInt(blocks[b][i][j],16);
-                        int bitwise = (num+columnKey[j+(l*4)])%256;
+                        int bitwise = (num+columnKey[l][j])%256;
                         //System.out.println("bitwise " + num + " " + bitwise);
                         blocks[b][i][j] = hex[bitwise];
                     }
@@ -210,8 +210,8 @@ class boxtrouble{
                     }
                 }
 
-                /*
                 // check bitwise
+                /*
                 for (int b = 0; b < blocks.length; b++){
                     for (int i = 0; i < blocks[b].length; i++){
                         for (int j = 0; j < blocks[b][i].length; j++){
@@ -234,11 +234,12 @@ class boxtrouble{
 
 
 
-    public static String[][][] boxDencrypt(String[] input, int[] rowKey, int[] columnKey, String[] roundKey){
+    public static String[][][] boxDencrypt(String[] input, int[][] rowKey, int[][] columnKey, String[] roundKey){
         Map<String, String> boxS = new LinkedHashMap<>();
 
         int total = (int)Math.ceil(input.length / 16.0);
         String[][][] blocks = new String[total][4][4];
+        String[][][] blocks1 = new String[total][4][4];
         int index = 0;
         int l = 4;
 
@@ -262,7 +263,7 @@ class boxtrouble{
         };
 
         String[] hex = new String[256];
-        for (int i = 0; i < 256; i++) {
+        for (int i = 0; i < 256; i++){
             hex[i] = String.format("%02X", i);
             String box = String.format("%02X", i);
             boxS.put(box, S[i]);
@@ -316,10 +317,11 @@ class boxtrouble{
                 for (int i = blocks[b].length-1; i >= 0; i--){
                     for (int j = blocks[b][i].length-1; j >= 0; j--){
                         int num = Integer.parseInt(blocks[b][i][j],16);
-                        int bitwise = (num-columnKey[j+(l*4)%16]);
+                        int bitwise = (num-columnKey[l-1][j]);
                         if(bitwise < 0){
                             bitwise += 256;
                         }
+                        //System.out.println("columnKey: " + columnKey[i][j]);
                         //System.out.println("bitwise " + num + " " + bitwise);
                         blocks[b][i][j] = hex[bitwise];
                     }
@@ -339,9 +341,37 @@ class boxtrouble{
                 System.out.println("column");
                 System.out.println();
             }
-            
-            l--;
+
+            // row
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        int bit = j - rowKey[l-1][j];
+                        if(bit < 0){
+                            blocks1[b][i][j] = blocks[b][i][(j - rowKey[l-1][j])+4];
+                        }else{
+                            blocks1[b][i][j] = blocks[b][i][j - rowKey[l-1][j]];
+                        }
+                    }
+                }
             }
+
+            // check row
+            
+            for(int b = 0; b < blocks1.length; b++){
+                for(int i = 0; i < blocks1[b].length; i++){
+                    for(int j = 0; j < blocks1[b][i].length; j++){
+                        System.out.print(blocks1[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("row");
+                System.out.println();
+            }
+            
+            
+        l--;
+        }
 
         return blocks;
      }
