@@ -104,7 +104,7 @@ class boxtrouble{
                         blocks[b][i][j] = "00"; // padding
                     }
 
-                index++;
+                    index++;
                 }
             }
         }
@@ -225,7 +225,7 @@ class boxtrouble{
                 */
             }
             
-        l++;
+            l++;
         }
     encrypted3 = Arrays.stream(blocks).flatMap(Arrays::stream).flatMap(Arrays::stream).toArray(String[]::new);
 
@@ -241,7 +241,7 @@ class boxtrouble{
         String[][][] blocks = new String[total][4][4];
         String[][][] blocks1 = new String[total][4][4];
         int index = 0;
-        int l = 4;
+        int l = 3;
 
         String[] S = {
             "52","09","6A","D5","30","36","A5","38","BF","40","A3","9E","81","F3","D7","FB",
@@ -277,12 +277,12 @@ class boxtrouble{
                         blocks[b][i][j] = input[index];
                     }
 
-                index++;
+                    index++;
                 }
             }
         }
 
-        while(l > 0){
+        while(l >= 0){
             if(l > 0){
                 // bitwise
                 for (int b = blocks.length-1; b >= 0; b--){
@@ -317,7 +317,7 @@ class boxtrouble{
                 for (int i = blocks[b].length-1; i >= 0; i--){
                     for (int j = blocks[b][i].length-1; j >= 0; j--){
                         int num = Integer.parseInt(blocks[b][i][j],16);
-                        int bitwise = (num-columnKey[l-1][j]);
+                        int bitwise = (num-columnKey[l][j]);
                         if(bitwise < 0){
                             bitwise += 256;
                         }
@@ -343,14 +343,14 @@ class boxtrouble{
             }
 
             // row
-            for (int b = 0; b < blocks.length; b++){
-                for (int i = 0; i < blocks[b].length; i++){
-                    for (int j = 0; j < blocks[b][i].length; j++){
-                        int bit = j - rowKey[l-1][j];
+            for (int b = blocks.length-1; b >= 0; b--){
+                for (int i = blocks[b].length-1; i >= 0; i--){
+                    for(int j = blocks[b][i].length-1; j >= 0; j--){
+                        int bit = j - rowKey[l][i];
                         if(bit < 0){
-                            blocks1[b][i][j] = blocks[b][i][(j - rowKey[l-1][j])+4];
+                            blocks1[b][i][j] = blocks[b][i][(j - rowKey[l][i])+4];
                         }else{
-                            blocks1[b][i][j] = blocks[b][i][j - rowKey[l-1][j]];
+                            blocks1[b][i][j] = blocks[b][i][j - rowKey[l][i]];
                         }
                     }
                 }
@@ -369,10 +369,10 @@ class boxtrouble{
                 System.out.println();
             }
             
-            
-        l--;
+            l--;
         }
 
         return blocks;
      }
 }
+
