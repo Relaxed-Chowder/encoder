@@ -49,10 +49,22 @@ class boxtrouble{
 
 
         }else if (encrypt == 2){
-            String[][][] decrypted = boxDencrypt(input, rowKey, columnKey, roundKey);
+            String[] decrypted = boxDencrypt(input, rowKey, columnKey, roundKey);
+            int i = 0;
             System.out.println(Arrays.toString(decrypted));
             System.out.println("after box");
             System.out.println();
+            for(String s : decrypted){
+                if(i%2 == 0 && i != 0){
+                    System.out.print(" ");
+                }
+                i++;
+                System.out.print(s);
+                i++;
+            }
+            System.out.println();
+            System.out.println("final");
+            
         }
     }
      public static String[] boxEncrypt(String[] encrypted2, int[][] rowKey, int[][] columnKey, String[] roundKey){
@@ -153,7 +165,7 @@ class boxtrouble{
             for (int b = 0; b < blocks.length; b++){
                 for (int i = 0; i < blocks[b].length; i++){
                     for (int j = 0; j < blocks[b][i].length; j++){
-                        blocks1[b][i][j] = blocks[b][i][(j + rowKey[l][j]) % blocks[b].length];
+                        blocks1[b][i][(j + rowKey[l][i]) % 4] = blocks[b][i][j];
                     }
                 }
             }
@@ -234,7 +246,7 @@ class boxtrouble{
 
 
 
-    public static String[][][] boxDencrypt(String[] input, int[][] rowKey, int[][] columnKey, String[] roundKey){
+    public static String[] boxDencrypt(String[] input, int[][] rowKey, int[][] columnKey, String[] roundKey){
         Map<String, String> boxS = new LinkedHashMap<>();
 
         int total = (int)Math.ceil(input.length / 16.0);
@@ -242,6 +254,7 @@ class boxtrouble{
         String[][][] blocks1 = new String[total][4][4];
         int index = 0;
         int l = 3;
+        String[] decrypted;
 
         String[] S = {
             "52","09","6A","D5","30","36","A5","38","BF","40","A3","9E","81","F3","D7","FB",
@@ -346,12 +359,7 @@ class boxtrouble{
             for (int b = blocks.length-1; b >= 0; b--){
                 for (int i = blocks[b].length-1; i >= 0; i--){
                     for(int j = blocks[b][i].length-1; j >= 0; j--){
-                        int bit = j - rowKey[l][i];
-                        if(bit < 0){
-                            blocks1[b][i][j] = blocks[b][i][(j - rowKey[l][i])+4];
-                        }else{
-                            blocks1[b][i][j] = blocks[b][i][j - rowKey[l][i]];
-                        }
+                        blocks1[b][i][(j - rowKey[l][i] + 4) % 4] = blocks[b][i][j];
                     }
                 }
             }
@@ -368,11 +376,36 @@ class boxtrouble{
                 System.out.println("row");
                 System.out.println();
             }
+
+            // boxS
+            for(int b = 0; b < total; b++){
+                for(int i = 0; i < 4; i++){
+                    for(int j = 0; j < 4; j++){
+                        String value = blocks1[b][i][j];
+                        blocks[b][i][j] = boxS.get(value);
+                    }
+                }
+            }
+
+            // check box
             
+            for (int b = 0; b < blocks.length; b++){
+                for (int i = 0; i < blocks[b].length; i++){
+                    for (int j = 0; j < blocks[b][i].length; j++){
+                        System.out.print(blocks[b][i][j] + " ");
+                    }
+                    System.out.println();
+                }
+                System.out.println("box");
+                System.out.println();
+            }
+            
+          
             l--;
         }
 
-        return blocks;
-     }
-}
+    decrypted = Arrays.stream(blocks).flatMap(Arrays::stream).flatMap(Arrays::stream).toArray(String[]::new);
 
+    return decrypted;
+    }
+}
